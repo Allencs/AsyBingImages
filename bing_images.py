@@ -42,15 +42,10 @@ class BingImages(object):
         for t in self.tasks:
             await t
 
-        self.event.set()
-        logger.info('下载连接获取完成，开始下载')
+        logger.info('下载链接获取完成，开始下载')
         self.tasks.clear()
 
     async def main(self):
-
-        if not self.event.is_set():
-            logger.info("waiting for download links...")
-            await self.event.wait()
 
         for downloadLink in self.management.downloadLinks:
             t = asyncio.create_task(self.client.download(downloadLink))
