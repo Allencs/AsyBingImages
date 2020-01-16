@@ -1,3 +1,4 @@
+import time
 from configuration import logger
 from client import Client
 from url_management import Management
@@ -31,6 +32,7 @@ class BingImages(object):
         self.management = Management()
         self.client = Client()
         self.event = asyncio.Event()
+        self.startTime = time.time()
         asyncio.run(self.download_links())
 
     async def download_links(self):
@@ -53,6 +55,9 @@ class BingImages(object):
 
         for task in self.tasks:
             await task
+
+        duration = time.time() - self.startTime
+        logger.info("用时： %.2fs" % duration)
 
 
 if __name__ == '__main__':

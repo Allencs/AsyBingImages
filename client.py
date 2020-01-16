@@ -45,22 +45,41 @@ class Client(object):
         return tags
 
     @staticmethod
-    async def download(download_links):
+    async def download(download_link):
         """
         下载图片
-        :param download_links: 下载链接
+        :param download_link: 下载链接
         :return: None
         """
-        image_name = download_links[0]
+
+        # async with aiohttp.ClientSession() as session:
+        #     for link in download_links:
+        #         image_name = link[0]
+        #         async with session.get(link[1]) as resp:
+        #             with open(r".\images\{}.jpg".format(image_name), "wb+") as f:
+        #                 while True:
+        #                     chunk = await resp.content.read(1024)
+        #                     if not chunk:
+        #                         break
+        #                     f.write(chunk)
+        #             logger.info(image_name)
+
         async with aiohttp.ClientSession() as session:
-            async with session.get(download_links[1]) as resp:
-                with open(r".\images\{}.jpg".format(image_name), "wb+") as f:
-                    while True:
-                        chunk = await resp.content.read(1024)
-                        if not chunk:
-                            break
-                        f.write(chunk)
-                logger.info(image_name)
+            image_name = download_link[0]
+            try:
+                async with session.get(download_link[1]) as resp:
+                    with open(r".\images\{}.jpg".format(image_name), "wb+") as f:
+                        while True:
+                            chunk = await resp.content.read(1024)
+                            if not chunk:
+                                break
+                            f.write(chunk)
+                    logger.info(image_name)
+
+            except asyncio.TimeoutError:
+                print("{} 下载超时".format(image_name))
+            except Exception as e:
+                raise e
 
 
 if __name__ == '__main__':
