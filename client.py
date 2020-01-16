@@ -52,7 +52,6 @@ class Client(object):
         :return: None
         """
         image_name = download_links[0]
-        logger.info(image_name)
         async with aiohttp.ClientSession() as session:
             async with session.get(download_links[1]) as resp:
                 with open(r".\images\{}.jpg".format(image_name), "wb+") as f:
@@ -61,6 +60,7 @@ class Client(object):
                         if not chunk:
                             break
                         f.write(chunk)
+                logger.info(image_name)
 
 
 if __name__ == '__main__':
