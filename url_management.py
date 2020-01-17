@@ -11,7 +11,6 @@ class Management(object):
 
     def __init__(self):
         self.assign_urls()
-        pass
 
     def __call__(self, *args, **kwargs):
         partial_link = args[0]

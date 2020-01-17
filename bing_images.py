@@ -31,7 +31,6 @@ class BingImages(object):
         check_path()
         self.management = Management()
         self.client = Client()
-        self.event = asyncio.Event()
         self.startTime = time.time()
         asyncio.run(self.download_links())
 

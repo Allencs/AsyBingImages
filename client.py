@@ -51,7 +51,6 @@ class Client(object):
         :param download_link: 下载链接
         :return: None
         """
-
         # async with aiohttp.ClientSession() as session:
         #     for link in download_links:
         #         image_name = link[0]
