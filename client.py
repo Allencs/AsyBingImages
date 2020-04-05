@@ -45,9 +45,10 @@ class Client(object):
         return tags
 
     @staticmethod
-    async def download(download_link):
+    async def download(download_link, semaphore=None):
         """
         下载图片
+        :param semaphore: 控制连接并发数
         :param download_link: 下载链接
         :return: None
         """
@@ -63,22 +64,28 @@ class Client(object):
         #                     f.write(chunk)
         #             logger.info(image_name)
 
-        async with aiohttp.ClientSession() as session:
-            image_name = download_link[0]
-            try:
-                async with session.get(download_link[1]) as resp:
-                    with open(r".\images\{}.jpg".format(image_name), "wb+") as f:
-                        while True:
-                            chunk = await resp.content.read(1024)
-                            if not chunk:
-                                break
-                            f.write(chunk)
-                    logger.info(image_name)
+        async with semaphore:
+            async with aiohttp.ClientSession() as session:
+                image_name = download_link[0]
+                try:
+                    async with session.get(download_link[1]) as resp:
+                        with open(r".\images\{}.jpg".format(image_name), "wb+") as f:
+                            while True:
+                                try:
+                                    chunk = await resp.content.read(256)
+                                except Exception:
+                                    print("{} is error".format(image_name))
+                                    break
+                                else:
+                                    if not chunk:
+                                        break
+                                    f.write(chunk)
+                            logger.info(image_name)
 
-            except asyncio.TimeoutError:
-                print("{} 下载超时".format(image_name))
-            except Exception as e:
-                raise e
+                except asyncio.TimeoutError:
+                    print("{} 下载超时".format(image_name))
+                except Exception as e:
+                    raise e
 
 
 if __name__ == '__main__':
