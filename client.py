@@ -52,17 +52,6 @@ class Client(object):
         :param download_link: 下载链接
         :return: None
         """
-        # async with aiohttp.ClientSession() as session:
-        #     for link in download_links:
-        #         image_name = link[0]
-        #         async with session.get(link[1]) as resp:
-        #             with open(r".\images\{}.jpg".format(image_name), "wb+") as f:
-        #                 while True:
-        #                     chunk = await resp.content.read(1024)
-        #                     if not chunk:
-        #                         break
-        #                     f.write(chunk)
-        #             logger.info(image_name)
 
         async with semaphore:
             async with aiohttp.ClientSession() as session:
